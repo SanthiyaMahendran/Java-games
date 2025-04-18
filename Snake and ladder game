@@ -1,0 +1,74 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class SnakeAndLadder {
+
+    static final int WIN_POINT = 100;
+    static final int[] snakes = {99, 91, 65, 25, 59};
+    static final int[] snakeTails = {21, 61, 40, 5, 1};
+    static final int[] ladders = {4, 8, 28, 58, 80};
+    static final int[] ladderTops = {14, 26, 84, 77, 99};
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random dice = new Random();
+
+        int player1 = 0, player2 = 0;
+        boolean player1Turn = true;
+
+        System.out.println("Welcome to Snake and Ladder Game!");
+        System.out.println("First to reach 100 wins!");
+
+        while (player1 < WIN_POINT && player2 < WIN_POINT) {
+            System.out.println("\n" + (player1Turn ? "Player 1" : "Player 2") + ", press Enter to roll the dice...");
+            scanner.nextLine();
+
+            int roll = dice.nextInt(6) + 1;
+            System.out.println("You rolled a " + roll);
+
+            if (player1Turn) {
+                player1 = movePlayer(player1, roll);
+                System.out.println("Player 1 is now at position " + player1);
+            } else {
+                player2 = movePlayer(player2, roll);
+                System.out.println("Player 2 is now at position " + player2);
+            }
+
+            if (player1 >= WIN_POINT) {
+                System.out.println("\nPlayer 1 wins!");
+                break;
+            } else if (player2 >= WIN_POINT) {
+                System.out.println("\nPlayer 2 wins!");
+                break;
+            }
+
+            player1Turn = !player1Turn;
+        }
+
+        scanner.close();
+    }
+
+    static int movePlayer(int position, int roll) {
+        if (position + roll > WIN_POINT) return position;
+
+        position += roll;
+
+        // Check for snakes
+        for (int i = 0; i < snakes.length; i++) {
+            if (position == snakes[i]) {
+                System.out.println("Oops! Bitten by a snake at " + position);
+                return snakeTails[i];
+            }
+        }
+
+        // Check for ladders
+        for (int i = 0; i < ladders.length; i++) {
+            if (position == ladders[i]) {
+                System.out.println("Yay! Climbed a ladder at " + position);
+                return ladderTops[i];
+            }
+        }
+
+        return position;
+    }
+}
